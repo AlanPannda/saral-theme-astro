@@ -5,6 +5,18 @@ import type { MarkdownHeading, ImageMetadata } from 'astro'
 import TableOfContents from '../components/TableOfContents.astro'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import BaseLayout from './BaseLayout.astro'
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+import { SITE_BASE } from '@/consts'
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbSeparator,
+	BreadcrumbPage,
+} from '../components/ui/breadcrumb'
 
 dayjs.extend(utc)
 
@@ -25,22 +37,33 @@ const {
 	remarkPluginFrontmatter,
 } = Astro.props
 
-import BaseLayout from './BaseLayout.astro'
-import { Image } from 'astro:assets'
-import { Icon } from 'astro-icon/components'
-
 const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 	'/src/assets/blogimages/**/*.{jpeg,jpg,png,gif}'
 )
 
 const coverImagePath = `/src/assets/blogimages/${slug}/cover.jpg`
 
+// 检查 coverImageCredit 是否是图片路径（以 / 开头）
+const isCoverImagePath = coverImageCredit?.startsWith('/')
+const coverImageSrc =
+	isCoverImagePath && coverImageCredit
+		? `${SITE_BASE}${coverImageCredit}`
+		: null
+const coverImageUrl =
+	isCoverImagePath && coverImageSrc ? new URL(coverImageSrc, Astro.site) : null
+
 const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 	.utc()
 	.format('D MMM YYYY')
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+	title={title}
+	description={description}
+	image={isCoverImagePath && coverImageUrl
+		? coverImageUrl.toString()
+		: undefined}
+>
 	<main>
 		<article>
 			<div
@@ -53,6 +76,21 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 				</div>
 				<div class="grow w-full md:max-w-[75ch]">
 					<div>
+						<Breadcrumb client:idle>
+							<BreadcrumbList>
+								<BreadcrumbItem>
+									<BreadcrumbLink href="/">Home</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbLink href="/blog">Blog</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator />
+								<BreadcrumbItem>
+									<BreadcrumbPage>{title}</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
 						<h1 class="text-4xl sm:text-5xl leading-snug pt-12 font-bold">
 							{title}
 						</h1>
@@ -90,24 +128,30 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 						</div>
 
 						{
-							blogImages[coverImagePath] && (
+							isCoverImagePath && coverImageSrc ? (
 								<>
-									<Image
-										src={blogImages[coverImagePath]()}
-										alt={title}
-										class="rounded-lg"
-									/>
-									{coverImageCredit && (
-										<p class="mt-2 mb-8 opacity-80 italic text-sm">
-											Image Credit: {coverImageCredit}
-										</p>
-									)}
+									<img src={coverImageSrc} alt={title} class="rounded-lg" />
 								</>
+							) : (
+								blogImages[coverImagePath] && (
+									<>
+										<Image
+											src={blogImages[coverImagePath]()}
+											alt={title}
+											class="rounded-lg"
+										/>
+										{coverImageCredit && (
+											<p class="mt-2 mb-8 opacity-80 italic text-sm">
+												Image Credit: {coverImageCredit}
+											</p>
+										)}
+									</>
+								)
 							)
 						}
 					</div>
 					<div
-						class="prose prose-neutral prose-lg md:prose-xl dark:prose-invert prose-img:rounded-xl prose-figure:text-center prose-img:mx-auto"
+						class="mt-8 prose prose-neutral prose-lg md:prose-xl dark:prose-invert prose-img:rounded-xl prose-figure:text-center prose-img:mx-auto"
 					>
 						<slot />
 					</div>

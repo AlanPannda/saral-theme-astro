@@ -1,5 +1,17 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
-	"editor.tabSize": 2
+	"editor.tabSize": 2,
+	"[markdown]": {},
+	"[astro]": {
+		"yaml.validate": false,
+		"yaml.schemas": {}
+	},
+	"files.associations": {
+		"src/components/*.astro": "astro",
+		"src/layouts/*.astro": "astro"
+	},
+	"yaml.customTags": [],
+	"frontMatter.content.ignoreFiles": ["**/components/**", "**/layouts/**"],
+	"yaml.schemaStore.enable": true
 }

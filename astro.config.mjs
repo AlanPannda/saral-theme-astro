@@ -9,10 +9,11 @@ import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 import { remarkModifiedTime } from './src/plugins/remark-modified-time.mjs'
 
+import react from '@astrojs/react'
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://yashjawale.github.io',
-	base: '/saral-theme-astro',
 	integrations: [
 		mdx(),
 		sitemap(),
@@ -22,6 +23,7 @@ export default defineConfig({
 				forward: ['dataLayer.push'],
 			},
 		}),
+		react(),
 	],
 	vite: {
 		plugins: [tailwindcss()],

@@ -17,7 +17,7 @@ import LogoSVG from '../assets/logo.svg'
 					WebsiteLinks.map((link) => (
 						<NavbarLink
 							class="text-lg"
-							href={`${SITE_BASE}/${link.url}`}
+							href={`${SITE_BASE}${link.url.startsWith('/') ? '' : '/'}${link.url}`}
 							target={link.url.charAt(0) === 'h' ? '_blank' : '_self'}
 						>
 							{link.name}
@@ -51,7 +51,10 @@ import LogoSVG from '../assets/logo.svg'
 				<div class="flex flex-col h-full items-start gap-8 pt-16">
 					{
 						WebsiteLinks.map((link) => (
-							<NavbarLink class="text-4xl font-light" href={link.url}>
+							<NavbarLink
+								class="text-4xl font-light"
+								href={`${SITE_BASE}${link.url.startsWith('/') ? '' : '/'}${link.url}`}
+							>
 								{link.name}
 							</NavbarLink>
 						))

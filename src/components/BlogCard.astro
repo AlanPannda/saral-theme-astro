@@ -11,6 +11,13 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 )
 
 const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
+
+// Only use coverImageCredit if it's an image path starting with /
+const isCoverImagePath = post.data.coverImageCredit?.startsWith('/')
+const coverImageSrc =
+	isCoverImagePath && post.data.coverImageCredit
+		? `${SITE_BASE}${post.data.coverImageCredit}`
+		: null
 ---
 
 <a
@@ -18,12 +25,20 @@ const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
 	class="flex flex-col gap-4 pb-8 h-full group transition-colors"
 >
 	{
-		blogImages[coverImagePath] && (
-			<Image
-				src={blogImages[coverImagePath]()}
+		isCoverImagePath && coverImageSrc ? (
+			<img
+				src={coverImageSrc}
 				alt={post.data.title}
 				class="object-cover rounded-xl aspect-video"
 			/>
+		) : (
+			blogImages[coverImagePath] && (
+				<Image
+					src={blogImages[coverImagePath]()}
+					alt={post.data.title}
+					class="object-cover rounded-xl aspect-video"
+				/>
+			)
 		)
 	}
 	<h4
