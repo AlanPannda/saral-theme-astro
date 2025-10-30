@@ -8,6 +8,7 @@ import utc from 'dayjs/plugin/utc'
 import BaseLayout from './BaseLayout.astro'
 import { Image } from 'astro:assets'
 import { Icon } from 'astro-icon/components'
+import { Badge } from '../components/ui/badge'
 import { SITE_BASE } from '@/consts'
 import {
 	Breadcrumb,
@@ -35,6 +36,7 @@ const {
 	headings,
 	slug,
 	remarkPluginFrontmatter,
+	tag,
 } = Astro.props
 
 const blogImages = import.meta.glob<{ default: ImageMetadata }>(
@@ -156,17 +158,15 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 						<slot />
 					</div>
 
-					<!-- Suggest edit -->
-					<div class="flex justify-between mt-16 gap-4 flex-wrap italic">
-						<a
-							href={`https://github.com/yashjawale/yashjawale.github.io/edit/main/src/content/blog/${slug}.md`}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:underline underline-offset-4 opacity-70 hover:opacity-100"
-							><Icon name="mdi:pencil-outline" class="inline-block" />
-							Suggest an edit
-						</a>
-						<p class="opacity-70">
+					<!-- Tags -->
+					<div class="flex justify-between mt-16 gap-4 flex-wrap items-center">
+						<div class="flex items-center gap-3 flex-wrap">
+							{
+								tag &&
+									tag.map((t: string) => <Badge variant="secondary">{t}</Badge>)
+							}
+						</div>
+						<p class="opacity-70 italic">
 							Last modified: {lastModified}
 						</p>
 					</div>

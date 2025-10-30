@@ -1,44 +1,56 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { SITE_BASE, SocialLinks } from '../consts'
+import { SITE_BASE } from '../consts'
 import { Icon } from 'astro-icon/components'
 import BlogCard from '../components/BlogCard.astro'
-import { getCollection } from 'astro:content'
+import Timeline from '../components/Timeline.astro'
+import { getCollection, getEntry } from 'astro:content'
 
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 4)
+
+// Get specific featured article
+const featuredPost = await getEntry(
+	'blog',
+	'a-brief-treatise-on-the-color-of-tuesdays'
+)
 ---
 
 <BaseLayout>
-	<main
-		class="app-container flex flex-col gap-12 justify-center py-36 md:py-48 pt-44 md:pt-56 relative"
-	>
-		<div>
-			<p class="block text-3xl opacity-70 mt-9 mb-4">Welcome to</p>
-			<h1 class="text-8xl font-bold leading-none">Saral Theme</h1>
-		</div>
-		<p class="text-2xl max-w-2xl font-light leading-normal">
-			A simple theme for personal blog sites, created for Astro framework.
-		</p>
-		<div class="flex flex-wrap gap-8">
+	<main class="app-container grid lg:grid-cols-3 gap-12 pt-30 pb-10 relative">
+		<!-- Left Section: Welcome + Blog Cards -->
+		<div class="lg:col-span-2 space-y-12">
 			{
-				SocialLinks.map((link) => (
-					<a
-						class="text-xl text-primary dark:text-primary-dark underline hover:underline underline-offset-4"
-						href={link.url}
-						target="_blank"
-					>
-						{link.name}
-					</a>
-				))
+				featuredPost && (
+					<div class="w-full">
+						<BlogCard post={featuredPost} />
+					</div>
+				)
 			}
+		</div>
+
+		<!-- Right Section: Latest Posts Table -->
+		<div class="space-y-6">
+			<h2 class="section-title">Latest</h2>
+			<Timeline
+				items={posts.map((post) => ({
+					title: post.data.title,
+					date: post.data.pubDate.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+					}),
+					description: post.data.description,
+					href: `/blog/${post.slug}`,
+				}))}
+			/>
 		</div>
 	</main>
 
-	<!-- Recent Posts Section -->
-	<section class="app-container">
-		<h2 class="section-title">Recent Posts</h2>
+	<!-- Featured Article Section -->
+	<section class="app-container py-8">
+		<!-- Blog Cards Grid -->
 		<div class="posts-grid-container">
 			{posts.map((post) => <BlogCard post={post} />)}
 		</div>
@@ -49,7 +61,7 @@ const posts = (await getCollection('blog'))
 	</section>
 
 	<!-- Recent Posts Section -->
-	<section class="app-container py-42 grid lg:grid-cols-2 gap-28 lg:gap-10">
+	<section class="app-container py-20 grid lg:grid-cols-2 gap-28 lg:gap-10">
 		<div class="space-y-6">
 			<h2 class="section-title">About Me</h2>
 			<p class="text-lg max-w-xl pb-4">
