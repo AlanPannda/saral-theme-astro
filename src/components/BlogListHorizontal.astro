@@ -1,0 +1,88 @@
+---
+import { SITE_BASE } from '@/consts'
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+type Props = {
+	posts: Array<{
+		slug: string
+		data: {
+			title: string
+			description?: string
+			pubDate: Date
+			coverImageCredit?: string
+		}
+	}>
+}
+
+const { posts } = Astro.props
+
+const blogImages = import.meta.glob<{ default: ImageMetadata }>(
+	'/src/assets/blogimages/**/*.{jpeg,jpg,png,gif}'
+)
+---
+
+<div class="space-y-0">
+	{
+		posts.map((post, index) => {
+			const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
+			const isCoverImagePath = post.data.coverImageCredit?.startsWith('/')
+			const coverImageSrc =
+				isCoverImagePath && post.data.coverImageCredit
+					? `${SITE_BASE}${post.data.coverImageCredit}`
+					: null
+
+			return (
+				<>
+					<a
+						href={`${SITE_BASE}/blog/${post.slug}/`}
+						class="flex flex-col md:flex-row gap-6 py-8 group hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors -mx-4 px-4 rounded-lg"
+					>
+						{/* 左侧：信息 */}
+						<div class="flex-1 flex flex-col justify-center space-y-3">
+							<h3 class="text-2xl font-semibold group-hover:text-primary dark:group-hover:text-primary-dark group-hover:underline transition-colors">
+								{post.data.title}
+							</h3>
+							{post.data.description && (
+								<p class="text-base opacity-70 line-clamp-3">
+									{post.data.description}
+								</p>
+							)}
+							<p class="text-sm opacity-60 uppercase tracking-tight">
+								{post.data.pubDate.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric',
+								})}
+							</p>
+						</div>
+
+						{/* 右侧：图片 */}
+						<div class="md:w-80 shrink-0">
+							{isCoverImagePath && coverImageSrc ? (
+								<img
+									src={coverImageSrc}
+									alt={post.data.title}
+									class="object-cover rounded-xl aspect-video w-full h-full"
+								/>
+							) : (
+								blogImages[coverImagePath] && (
+									<Image
+										src={blogImages[coverImagePath]()}
+										alt={post.data.title}
+										class="object-cover rounded-xl aspect-video w-full h-full"
+									/>
+								)
+							)}
+						</div>
+					</a>
+
+					{/* 分割线 - 不在最后一项显示 */}
+					{index !== posts.length - 1 && (
+						<div class="border-t border-gray-200 dark:border-gray-800" />
+					)}
+				</>
+			)
+		})
+	}
+</div>

@@ -13,7 +13,12 @@ export async function getStaticPaths() {
 	)
 	return posts.map((post, index) => ({
 		params: { slug: post.slug },
-		props: { post, headings: headings[index], slug: post.slug },
+		props: {
+			post,
+			headings: headings[index],
+			slug: post.slug,
+			allPosts: posts,
+		},
 	}))
 }
 
@@ -21,10 +26,17 @@ type Props = {
 	post: CollectionEntry<'blog'>
 	headings: MarkdownHeading[]
 	slug: string
+	allPosts: CollectionEntry<'blog'>[]
 }
 
-const { post, headings, slug } = Astro.props
+const { post, headings, slug, allPosts } = Astro.props
 const { Content, remarkPluginFrontmatter } = await post.render()
+
+// 获取其他博客文章（排除当前文章，按日期排序，取前3篇）
+const otherPosts = allPosts
+	.filter((p) => p.slug !== slug)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3)
 ---
 
 <BlogPostLayout
@@ -32,6 +44,7 @@ const { Content, remarkPluginFrontmatter } = await post.render()
 	headings={headings}
 	slug={slug}
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
+	otherPosts={otherPosts}
 >
 	<Content />
 </BlogPostLayout>
