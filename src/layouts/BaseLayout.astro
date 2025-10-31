@@ -24,6 +24,17 @@ import '@fontsource-variable/jetbrains-mono'
 			description={description || SITE_DESCRIPTION}
 			image={image}
 		/>
+		<script is:inline>
+			try {
+				const root = document.documentElement
+				const storedTheme = localStorage.getItem('theme')
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+				const shouldUseDark = storedTheme === 'dark' || (!storedTheme && prefersDark)
+				root.classList.toggle('dark', shouldUseDark)
+			} catch (_error) {
+				/* no-op: localStorage unavailable (privacy mode) */
+			}
+		</script>
 	</head>
 	<body
 		class="text-foreground bg-background font-light dark:text-foreground-dark dark:bg-background-dark transition-colors"

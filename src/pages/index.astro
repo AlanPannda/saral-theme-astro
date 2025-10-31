@@ -3,10 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import { SITE_BASE } from '../consts'
 import { Icon } from 'astro-icon/components'
 import BlogCard from '../components/BlogCard.astro'
+import BlogTagFilter from '../components/BlogTagFilter'
 import Timeline from '../components/Timeline.astro'
 import { getCollection, getEntry } from 'astro:content'
 
-const posts = (await getCollection('blog'))
+const allPosts = await getCollection('blog')
+
+const posts = allPosts
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 4)
 
@@ -15,6 +18,25 @@ const featuredPost = await getEntry(
 	'blog',
 	'a-brief-treatise-on-the-color-of-tuesdays'
 )
+
+// Extract all unique tags
+const allTags = ['Reviews', 'News', 'Esports', 'Guides', 'Web']
+
+// Serialize posts data for React component
+const postsData = allPosts.map((post) => ({
+	slug: post.slug,
+	title: post.data.title,
+	description: post.data.description,
+	pubDate: post.data.pubDate.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}),
+	tags: post.data.tag || [],
+	coverImage: post.data.coverImageCredit?.startsWith('/')
+		? `${SITE_BASE}${post.data.coverImageCredit}`
+		: undefined,
+}))
 ---
 
 <BaseLayout>
@@ -50,10 +72,9 @@ const featuredPost = await getEntry(
 
 	<!-- Featured Article Section -->
 	<section class="app-container py-8">
-		<!-- Blog Cards Grid -->
-		<div class="posts-grid-container">
-			{posts.map((post) => <BlogCard post={post} />)}
-		</div>
+		<h2 class="section-title">Blog</h2>
+		<!-- Blog Tag Filter with Cards Grid -->
+		<BlogTagFilter client:load posts={postsData} availableTags={allTags} />
 		<a class="btn-secondary" href="/blog"
 			>Read All
 			<Icon size={20} name="mdi:arrow-right" />

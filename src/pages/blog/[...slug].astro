@@ -37,6 +37,12 @@ const otherPosts = allPosts
 	.filter((p) => p.slug !== slug)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3)
+
+// 获取最近的5篇文章（不是当前文章）
+const lastPosts = allPosts
+	.filter((p) => p.slug !== slug)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5)
 ---
 
 <BlogPostLayout
@@ -45,6 +51,7 @@ const otherPosts = allPosts
 	slug={slug}
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 	otherPosts={otherPosts}
+	lastPost={lastPosts}
 >
 	<Content />
 </BlogPostLayout>

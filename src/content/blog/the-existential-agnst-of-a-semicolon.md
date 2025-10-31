@@ -1,9 +1,10 @@
 ---
-title: 'The Existential Angst of a Semicolon'
+title: The Existential Angst of a Semicolon
 description: |
   An intimate look into the mind of a semicolon as it grapples with its relevance in a changing world.
   It fears becoming a digital appendix, a relic from a more structured, syntactical time.
-pubDate: 'Sep 12 2025'
+pubDate: Sep 12 2025
+coverImageCredit: /blog-images/the-existential-agnst-of-a-semicolon.jpg
 ---
 
 A semicolon confided in me yesterday. It feels perpetually stuck between a rock and a hard place—or more accurately, between `const a = 1` and `return a`. "Am I a pause?" it wondered, "Or just a very weak full stop with ambition?" In a world of Python and optional JavaScript syntax, it fears becoming a digital appendix, a relic of a more structured time. I told it to hang in there. At least it's not a comma splice. Nobody respects a comma splice.

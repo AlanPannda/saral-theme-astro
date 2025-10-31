@@ -1,9 +1,10 @@
 ---
-title: 'My Wi-Fi Password is a Haiku'
+title: My Wi-Fi Password is a Haiku
 description: |
   An exploration of a Wi-Fi password as a misunderstood work of art, a modern haiku of our times.
   It’s a tragic tale of deep symbolism, late-night cravings, and guests who just want the internet.
-pubDate: 'Aug 21 2025'
+pubDate: Aug 21 2025
+coverImageCredit: /blog-images/my-wifi-password-is-a-haiku.jpg
 ---
 
 People see `P@neer!4Lyf_` and think it’s just a password. They are mistaken. It is a modern haiku, a commentary on culinary priorities and unwavering loyalty, all encrypted for your protection. The capital 'P' is a deliberate, disruptive flourish. The underscore represents the quiet, contemplative pause before the first bite. The exclamation mark? Pure, unadulterated joy. It's not just a key to the internet; it's a key to my soul. And the 5 GHz band.

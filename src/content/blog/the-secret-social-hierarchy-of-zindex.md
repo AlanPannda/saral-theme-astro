@@ -1,9 +1,10 @@
 ---
-title: 'The Secret Social Hierarchy of z-index'
+title: The Secret Social Hierarchy of z-index
 description: |
   Uncovering the hidden, dramatic social order governed by the CSS z-index property.
   From the humble static div to the tyrannical modal overlay, every element knows its place.
-pubDate: 'Sep 05 2025'
+pubDate: Sep 05 2025
+coverImageCredit: /blog-images/the-secret-social-hierarchy-of-zindex.jpg
 ---
 
 We see `z-index` as a simple CSS property for stacking elements. This is a profound misunderstanding. In reality, it is a rigid, unforgiving social hierarchy governing the document object model. At the very bottom are the humble elements with no `z-index`, the proletariat living on `z-index: auto`. They are the salt of the earth—the static paragraphs and background divs that hold the page together without ever asking for the spotlight.

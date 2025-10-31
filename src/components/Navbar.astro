@@ -82,16 +82,25 @@ import LogoSVG from '../assets/logo.svg'
 </header>
 
 <script is:inline>
+	function disableThemeTransitions() {
+		const root = document.documentElement
+		root.classList.add('disable-theme-transitions')
+		window.setTimeout(() => {
+			root.classList.remove('disable-theme-transitions')
+		}, 0)
+	}
+
+	function setDarkMode(isDark) {
+		disableThemeTransitions()
+		document.documentElement.classList.toggle('dark', isDark)
+	}
+
 	function reComputeTheme() {
-		if (
+		setDarkMode(
 			localStorage.theme === 'dark' ||
-			(!('theme' in localStorage) &&
-				window.matchMedia('(prefers-color-scheme: dark)').matches)
-		) {
-			document.documentElement.classList.add('dark')
-		} else {
-			document.documentElement.classList.remove('dark')
-		}
+				(!('theme' in localStorage) &&
+					window.matchMedia('(prefers-color-scheme: dark)').matches)
+		)
 
 		const theme = localStorage.theme || 'auto'
 		document
@@ -100,7 +109,7 @@ import LogoSVG from '../assets/logo.svg'
 	}
 
 	function addThemeEventListeners() {
-		themeButtons = document.querySelectorAll('.theme-button')
+		const themeButtons = document.querySelectorAll('.theme-button')
 		themeButtons.forEach((button) => {
 			button.addEventListener('click', () => {
 				themeButtons.forEach((btn) => btn.classList.remove('active'))
@@ -110,10 +119,7 @@ import LogoSVG from '../assets/logo.svg'
 					reComputeTheme()
 				} else {
 					localStorage.theme = button.dataset.theme.replace('theme-', '')
-					document.documentElement.classList.toggle(
-						'dark',
-						button.dataset.theme === 'theme-dark'
-					)
+					setDarkMode(button.dataset.theme === 'theme-dark')
 				}
 			})
 		})

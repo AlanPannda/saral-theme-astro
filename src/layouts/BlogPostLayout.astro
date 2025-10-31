@@ -4,6 +4,7 @@ import FormattedDate from '../components/FormattedDate.astro'
 import type { MarkdownHeading, ImageMetadata } from 'astro'
 import TableOfContents from '../components/TableOfContents.astro'
 import BlogListHorizontal from '../components/BlogListHorizontal.astro'
+import BlogListSmall from '../components/BlogListSmall.astro'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import BaseLayout from './BaseLayout.astro'
@@ -27,6 +28,7 @@ type Props = CollectionEntry<'blog'>['data'] & {
 	slug: string
 	remarkPluginFrontmatter: Record<string, string>
 	otherPosts?: CollectionEntry<'blog'>[]
+	lastPost?: CollectionEntry<'blog'>[]
 }
 
 const {
@@ -40,6 +42,7 @@ const {
 	remarkPluginFrontmatter,
 	tag,
 	otherPosts,
+	lastPost,
 } = Astro.props
 
 const blogImages = import.meta.glob<{ default: ImageMetadata }>(
@@ -77,6 +80,18 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 				<div class="md:w-1/4 relative">
 					<div class="sticky top-0 md:top-28 hidden lg:block">
 						<TableOfContents headings={headings} />
+
+						{/* 最后一篇文章 */}
+						{
+							lastPost && lastPost.length > 0 && (
+								<div class="mt-6 pt-8 border-t border-gray-200 dark:border-gray-800">
+									<h3 class="text-sm font-semibold mb-4 opacity-70">
+										Last Posts
+									</h3>
+									<BlogListSmall posts={lastPost} />
+								</div>
+							)
+						}
 					</div>
 				</div>
 				<div class="grow w-full md:max-w-[75ch]">
