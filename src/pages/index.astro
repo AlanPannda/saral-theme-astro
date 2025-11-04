@@ -22,6 +22,15 @@ const featuredPost = await getEntry(
 // Extract all unique tags
 const allTags = ['Reviews', 'News', 'Esports', 'Guides', 'Web']
 
+const categoryRoutes = {
+	All: '/blog',
+	Reviews: '/reviews',
+	News: '/news',
+	Esports: '/esports',
+	Guides: '/guides',
+	Web: '/web',
+}
+
 // Serialize posts data for React component
 const postsData = allPosts.map((post) => ({
 	slug: post.slug,
@@ -32,7 +41,7 @@ const postsData = allPosts.map((post) => ({
 		month: 'short',
 		day: 'numeric',
 	}),
-	tags: post.data.tag || [],
+	tags: post.data.categories || [],
 	coverImage: post.data.coverImageCredit?.startsWith('/')
 		? `${SITE_BASE}${post.data.coverImageCredit}`
 		: undefined,
@@ -74,11 +83,12 @@ const postsData = allPosts.map((post) => ({
 	<section class="app-container py-8">
 		<h2 class="section-title">Blog</h2>
 		<!-- Blog Tag Filter with Cards Grid -->
-		<BlogTagFilter client:load posts={postsData} availableTags={allTags} />
-		<a class="btn-secondary" href="/blog"
-			>Read All
-			<Icon size={20} name="mdi:arrow-right" />
-		</a>
+		<BlogTagFilter
+			client:load
+			posts={postsData}
+			availableTags={allTags}
+			cta={{ routes: categoryRoutes }}
+		/>
 	</section>
 
 	<!-- Recent Posts Section -->

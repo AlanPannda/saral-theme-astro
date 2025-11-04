@@ -36,10 +36,10 @@ export const WebsiteLinks = [
 	},
 	{
 		name: 'Blog',
-		url: 'blog',
+		url: '/blog',
 	},
 	{
 		name: 'About',
-		url: 'about',
+		url: '/about',
 	},
 ]

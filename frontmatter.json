@@ -41,6 +41,24 @@
           "title": "tag",
           "name": "tag",
           "type": "tags"
+        },
+        {
+          "title": "keywords",
+          "name": "keywords",
+          "type": "fields",
+          "fields": [
+            {
+              "title": "move",
+              "name": "move",
+              "type": "fields",
+              "fields": []
+            }
+          ]
+        },
+        {
+          "title": "categories",
+          "name": "categories",
+          "type": "categories"
         }
       ]
     }

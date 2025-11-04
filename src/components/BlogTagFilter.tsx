@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { SITE_BASE } from '@/consts'
 
 interface BlogPost {
@@ -10,16 +10,37 @@ interface BlogPost {
 	coverImage?: string
 }
 
+interface CategoryCtaConfig {
+	label?: string
+	routes: Record<string, string>
+}
+
 interface BlogTagFilterProps {
 	posts: BlogPost[]
 	availableTags: string[]
+	initialTag?: string
+	cta?: CategoryCtaConfig
 }
 
 export default function BlogTagFilter({
 	posts,
 	availableTags,
+	initialTag,
+	cta,
 }: BlogTagFilterProps) {
-	const [selectedTag, setSelectedTag] = useState<string>('All')
+	const tagOptions = useMemo(() => ['All', ...availableTags], [availableTags])
+	const normalizedInitialTag = useMemo(() => {
+		if (initialTag && tagOptions.includes(initialTag)) {
+			return initialTag
+		}
+		return 'All'
+	}, [initialTag, tagOptions])
+
+	const [selectedTag, setSelectedTag] = useState<string>(normalizedInitialTag)
+
+	useEffect(() => {
+		setSelectedTag(normalizedInitialTag)
+	}, [normalizedInitialTag])
 
 	const filteredPosts = useMemo(() => {
 		if (selectedTag === 'All') {
@@ -28,11 +49,26 @@ export default function BlogTagFilter({
 		return posts.filter((post) => post.tags.includes(selectedTag))
 	}, [selectedTag, posts])
 
+	const ctaHref = useMemo(() => {
+		if (!cta) {
+			return undefined
+		}
+
+		return (
+			cta.routes[selectedTag] ??
+			cta.routes.All ??
+			cta.routes['all'] ??
+			'/blog'
+		)
+	}, [cta, selectedTag])
+
+	const ctaLabel = cta?.label ?? 'Read All'
+
 	return (
 		<div className="space-y-8">
 			{/* Tag Navigation */}
 			<div className="flex flex-wrap gap-2 items-center">
-				{['All', ...availableTags].map((tag) => (
+				{tagOptions.map((tag) => (
 					<button
 						key={tag}
 						onClick={() => setSelectedTag(tag)}
@@ -80,6 +116,18 @@ export default function BlogTagFilter({
 					</p>
 				)}
 			</div>
+
+			{ctaHref && (
+				<div className="flex justify-end">
+					<a
+						className="btn-secondary inline-flex items-center gap-2"
+						href={ctaHref}
+					>
+						{ctaLabel}
+						<span aria-hidden="true">&rarr;</span>
+					</a>
+				</div>
+			)}
 		</div>
 	)
 }

@@ -7,6 +7,8 @@ tag:
   - demo
   - News
 keywords: []
+categories:
+  - News
 ---
 
 # adsfsdf

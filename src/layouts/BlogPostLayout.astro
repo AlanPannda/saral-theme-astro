@@ -5,6 +5,7 @@ import type { MarkdownHeading, ImageMetadata } from 'astro'
 import TableOfContents from '../components/TableOfContents.astro'
 import BlogListHorizontal from '../components/BlogListHorizontal.astro'
 import BlogListSmall from '../components/BlogListSmall.astro'
+// import BlogTagFilter from '../components/BlogTagFilter'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import BaseLayout from './BaseLayout.astro'
@@ -29,6 +30,16 @@ type Props = CollectionEntry<'blog'>['data'] & {
 	remarkPluginFrontmatter: Record<string, string>
 	otherPosts?: CollectionEntry<'blog'>[]
 	lastPost?: CollectionEntry<'blog'>[]
+	postsData?: Array<{
+		slug: string
+		title: string
+		description?: string
+		pubDate: string
+		tags: string[]
+		coverImage?: string
+	}>
+	availableTags?: string[]
+	initialCategory?: string
 }
 
 const {
@@ -43,6 +54,9 @@ const {
 	tag,
 	otherPosts,
 	lastPost,
+	// postsData,
+	// availableTags,
+	// initialCategory,
 } = Astro.props
 
 const blogImages = import.meta.glob<{ default: ImageMetadata }>(
@@ -63,6 +77,15 @@ const coverImageUrl =
 const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 	.utc()
 	.format('D MMM YYYY')
+
+// const tagRoutes = {
+// 	All: '/blog',
+// 	Reviews: '/reviews',
+// 	News: '/news',
+// 	Esports: '/esports',
+// 	Guides: '/guides',
+// 	Web: '/web',
+// }
 ---
 
 <BaseLayout
@@ -193,11 +216,30 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 					{
 						otherPosts && otherPosts.length > 0 && (
 							<div class="mt-16 pt-16 border-t-2 border-gray-200 dark:border-gray-800">
-								<h2 class="text-3xl font-bold mb-8">更多文章</h2>
+								<h2 class="text-3xl font-bold mb-8">More Posts</h2>
 								<BlogListHorizontal posts={otherPosts} />
 							</div>
 						)
 					}
+
+					<!-- {
+						postsData &&
+							postsData.length > 0 &&
+							availableTags && (
+								<div class="mt-16 pt-16 border-t-2 border-gray-200 dark:border-gray-800 space-y-8">
+									<div class="flex flex-wrap items-center justify-between gap-4">
+										<h2 class="text-3xl font-bold">Browse Categories</h2>
+									</div>
+									<BlogTagFilter
+										client:load
+										posts={postsData}
+										availableTags={availableTags}
+										initialTag={initialCategory}
+										cta={{ routes: tagRoutes }}
+									/>
+								</div>
+							)
+					} -->
 				</div>
 			</div>
 		</article>

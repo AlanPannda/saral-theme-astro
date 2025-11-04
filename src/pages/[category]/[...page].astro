@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getCollection, type CollectionEntry } from 'astro:content'
+import type { PaginateFunction } from 'astro'
+import BlogCard from '../../components/BlogCard.astro'
+import {
+	Breadcrumb,
+	BreadcrumbList,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbSeparator,
+	BreadcrumbPage,
+} from '../../components/ui/breadcrumb'
+
+export async function getStaticPaths({
+	paginate,
+}: {
+	paginate: PaginateFunction
+}) {
+	const posts = await getCollection('blog')
+
+	const categoryLabels = {
+		reviews: 'Reviews',
+		news: 'News',
+		esports: 'Esports',
+		guides: 'Guides',
+		web: 'Web',
+	}
+
+	return Object.entries(categoryLabels).flatMap(([slug, label]) => {
+		const categoryPosts = posts.filter((post) =>
+			(post.data.categories || []).includes(label)
+		)
+		return paginate(categoryPosts, {
+			params: { category: slug },
+			pageSize: 15,
+			props: { label },
+		})
+	})
+}
+
+type Props = {
+	label: string
+	page: {
+		data: CollectionEntry<'blog'>[]
+		currentPage: number
+		lastPage: number
+		total: number
+		url: {
+			prev?: string
+			next?: string
+		}
+	}
+}
+
+const { label, page } = Astro.props
+---
+
+<BaseLayout>
+	<main class="app-container pt-36">
+		<Breadcrumb client:idle>
+			<BreadcrumbList>
+				<BreadcrumbItem>
+					<BreadcrumbLink href="/">Home</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbSeparator />
+				<BreadcrumbItem>
+					<BreadcrumbPage>{label}</BreadcrumbPage>
+				</BreadcrumbItem>
+			</BreadcrumbList>
+		</Breadcrumb>
+		<h1 class="text-6xl pb-8 font-bold">{label}</h1>
+		<p class="md:w-2/3 text-lg leading-8">
+			All articles filed under the {label} category.
+		</p>
+	</main>
+	<section class="app-container py-12">
+		{
+			page.data.length > 0 ? (
+				<>
+					<ul class="posts-grid-container">
+						{page.data.map((post: CollectionEntry<'blog'>) => (
+							<li>
+								<BlogCard post={post} />
+							</li>
+						))}
+					</ul>
+
+					{/* 分页导航 */}
+					<nav class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+						<div class="flex justify-center items-center gap-4 flex-wrap">
+							{/* 上一页按钮 */}
+							{page.url.prev && (
+								<a
+									href={page.url.prev}
+									class="px-4 py-2 rounded-lg bg-primary text-white dark:bg-primary-dark dark:text-black hover:opacity-80 transition"
+								>
+									← Previous
+								</a>
+							)}
+
+							{/* 页码按钮 */}
+							<div class="flex gap-2 flex-wrap justify-center">
+								{Array.from({ length: page.lastPage }, (_, i) => i + 1).map(
+									(pageNum) => {
+										const isCurrentPage = pageNum === page.currentPage
+										const baseClasses =
+											'px-3 py-2 rounded-lg transition font-medium'
+										const activeClasses =
+											'bg-primary text-white dark:bg-primary-dark dark:text-black'
+										const inactiveClasses =
+											'bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700'
+										return (
+											<a
+												href={
+													pageNum === 1
+														? `/${Astro.params.category}/`
+														: `/${Astro.params.category}/${pageNum}/`
+												}
+												class:list={[
+													baseClasses,
+													isCurrentPage ? activeClasses : inactiveClasses,
+												]}
+											>
+												{pageNum}
+											</a>
+										)
+									}
+								)}
+							</div>
+
+							{/* 下一页按钮 */}
+							{page.url.next && (
+								<a
+									href={page.url.next}
+									class="px-4 py-2 rounded-lg bg-primary text-white dark:bg-primary-dark dark:text-black hover:opacity-80 transition"
+								>
+									Next →
+								</a>
+							)}
+						</div>
+
+						<p class="text-center mt-6 opacity-70 text-sm">
+							Page {page.currentPage} of {page.lastPage} · Total {page.total}{' '}
+							articles
+						</p>
+					</nav>
+				</>
+			) : (
+				<p class="text-center text-lg opacity-70 py-16">
+					No posts have been published in this category yet.
+				</p>
+			)
+		}
+	</section>
+</BaseLayout>

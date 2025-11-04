@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content'
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
 import type { MarkdownHeading } from 'astro'
+import { SITE_BASE } from '@/consts'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
@@ -32,9 +33,19 @@ type Props = {
 const { post, headings, slug, allPosts } = Astro.props
 const { Content, remarkPluginFrontmatter } = await post.render()
 
-// 获取其他博客文章（排除当前文章，按日期排序，取前3篇）
+// 获取其他博客文章（根据categories推荐相关文章，排除当前文章，按日期排序，取前3篇）
+const currentPostCategories = post.data.categories || []
 const otherPosts = allPosts
 	.filter((p) => p.slug !== slug)
+	.filter((p) => {
+		// 如果当前文章有 categories，优先显示有相同 category 的文章
+		if (currentPostCategories.length > 0) {
+			return p.data.categories?.some((cat) =>
+				currentPostCategories.includes(cat)
+			)
+		}
+		return true
+	})
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 3)
 
@@ -43,6 +54,27 @@ const lastPosts = allPosts
 	.filter((p) => p.slug !== slug)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 5)
+
+const availableTags = ['Reviews', 'News', 'Esports', 'Guides', 'Web']
+
+const postsData = allPosts.map((item) => ({
+	slug: item.slug,
+	title: item.data.title,
+	description: item.data.description,
+	pubDate: item.data.pubDate.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}),
+	tags: item.data.categories || [],
+	coverImage: item.data.coverImageCredit?.startsWith('/')
+		? `${SITE_BASE}${item.data.coverImageCredit}`
+		: undefined,
+}))
+
+const initialCategory =
+	post.data.categories?.find((category) => availableTags.includes(category)) ||
+	'All'
 ---
 
 <BlogPostLayout
@@ -52,6 +84,9 @@ const lastPosts = allPosts
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 	otherPosts={otherPosts}
 	lastPost={lastPosts}
+	postsData={postsData}
+	availableTags={availableTags}
+	initialCategory={initialCategory}
 >
 	<Content />
 </BlogPostLayout>
