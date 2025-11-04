@@ -55,10 +55,7 @@ export default function BlogTagFilter({
 		}
 
 		return (
-			cta.routes[selectedTag] ??
-			cta.routes.All ??
-			cta.routes['all'] ??
-			'/blog'
+			cta.routes[selectedTag] ?? cta.routes.All ?? cta.routes['all'] ?? '/blog'
 		)
 	}, [cta, selectedTag])
 
@@ -118,13 +115,22 @@ export default function BlogTagFilter({
 			</div>
 
 			{ctaHref && (
-				<div className="flex justify-end">
+				<div className="flex justify-center">
 					<a
 						className="btn-secondary inline-flex items-center gap-2"
 						href={ctaHref}
 					>
 						{ctaLabel}
-						<span aria-hidden="true">&rarr;</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="22"
+							height="22"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path d="M13.172 12 8.222 7.05l1.414-1.414L16 12l-6.364 6.364-1.414-1.414L13.172 12z" />
+						</svg>
 					</a>
 				</div>
 			)}

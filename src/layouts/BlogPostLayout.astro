@@ -65,14 +65,10 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 
 const coverImagePath = `/src/assets/blogimages/${slug}/cover.jpg`
 
-// 检查 coverImageCredit 是否是图片路径（以 / 开头）
-const isCoverImagePath = coverImageCredit?.startsWith('/')
-const coverImageSrc =
-	isCoverImagePath && coverImageCredit
-		? `${SITE_BASE}${coverImageCredit}`
-		: null
-const coverImageUrl =
-	isCoverImagePath && coverImageSrc ? new URL(coverImageSrc, Astro.site) : null
+// 仅当 coverImageCredit 为有效 URL 时使用
+const isCoverImageUrl = /^https?:\/\//.test(coverImageCredit || '')
+const coverImageSrc = isCoverImageUrl ? coverImageCredit : null
+const coverImageUrl = isCoverImageUrl && coverImageSrc ? new URL(coverImageSrc) : null
 
 const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 	.utc()
@@ -91,9 +87,7 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 <BaseLayout
 	title={title}
 	description={description}
-	image={isCoverImagePath && coverImageUrl
-		? coverImageUrl.toString()
-		: undefined}
+	image={isCoverImageUrl && coverImageUrl ? coverImageUrl.toString() : undefined}
 >
 	<main>
 		<article>
@@ -170,8 +164,8 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
 							</span>
 						</div>
 
-						{
-							isCoverImagePath && coverImageSrc ? (
+					{
+						isCoverImageUrl && coverImageSrc ? (
 								<>
 									<img src={coverImageSrc} alt={title} class="rounded-lg" />
 								</>

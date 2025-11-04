@@ -1,10 +1,10 @@
 ---
 title: two
-description: 这是一个测试
+description: 这是一个测试jin
 pubDate: 2025-11-04T03:04:25.581Z
-coverImageCredit: /blog-images/ghfoundations.jpg
 categories:
   - Reviews
+coverImageCredit: https://frontmatter.codes/releases/v10.0.0/delete-media.png
 ---
 
 # 啥时候放假

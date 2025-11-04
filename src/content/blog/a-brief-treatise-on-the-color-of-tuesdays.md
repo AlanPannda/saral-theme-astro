@@ -6,7 +6,7 @@ description: |
 pubDate: Aug 28 2025
 tags:
   - brief
-coverImageCredit: /blog-images/journey.jpg
+coverImageCredit: https://api.acgurl.link/img?type=ysh
 tag:
   - News
 categories:

@@ -67,8 +67,8 @@ const postsData = allPosts.map((item) => ({
 		day: 'numeric',
 	}),
 	tags: item.data.categories || [],
-	coverImage: item.data.coverImageCredit?.startsWith('/')
-		? `${SITE_BASE}${item.data.coverImageCredit}`
+	coverImage: /^https?:\/\//.test(item.data.coverImageCredit || '')
+		? item.data.coverImageCredit
 		: undefined,
 }))
 

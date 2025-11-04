@@ -33,9 +33,14 @@
           "type": "datetime"
         },
         {
+          "title": "categories",
+          "name": "categories",
+          "type": "categories"
+        },
+        {
           "title": "coverImageCredit",
           "name": "coverImageCredit",
-          "type": "image"
+          "type": "string"
         },
         {
           "title": "tag",
@@ -46,21 +51,10 @@
           "title": "keywords",
           "name": "keywords",
           "type": "fields",
-          "fields": [
-            {
-              "title": "move",
-              "name": "move",
-              "type": "fields",
-              "fields": []
-            }
-          ]
-        },
-        {
-          "title": "categories",
-          "name": "categories",
-          "type": "categories"
+          "fields": []
         }
       ]
     }
-  ]
+  ],
+  "frontMatter.panel.openOnSupportedFile": false
 }

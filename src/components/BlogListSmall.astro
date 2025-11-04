@@ -32,13 +32,14 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 				<div class="w-16 shrink-0">
 					{(() => {
 						const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
-						const isCoverImagePath = post.data.coverImageCredit?.startsWith('/')
-						const coverImageSrc =
-							isCoverImagePath && post.data.coverImageCredit
-								? `${SITE_BASE}${post.data.coverImageCredit}`
-								: null
+						const isCoverImageUrl = /^https?:\/\//.test(
+							post.data.coverImageCredit || ''
+						)
+						const coverImageSrc = isCoverImageUrl
+							? post.data.coverImageCredit
+							: null
 
-						return isCoverImagePath && coverImageSrc ? (
+						return isCoverImageUrl && coverImageSrc ? (
 							<img
 								src={coverImageSrc}
 								alt={post.data.title}

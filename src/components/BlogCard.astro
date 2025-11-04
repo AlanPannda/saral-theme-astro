@@ -12,12 +12,9 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 
 const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
 
-// Only use coverImageCredit if it's an image path starting with /
-const isCoverImagePath = post.data.coverImageCredit?.startsWith('/')
-const coverImageSrc =
-	isCoverImagePath && post.data.coverImageCredit
-		? `${SITE_BASE}${post.data.coverImageCredit}`
-		: null
+// 仅当 coverImageCredit 为有效 URL 时使用
+const isCoverImageUrl = /^https?:\/\//.test(post.data.coverImageCredit || '')
+const coverImageSrc = isCoverImageUrl ? post.data.coverImageCredit : null
 ---
 
 <a
@@ -25,7 +22,7 @@ const coverImageSrc =
 	class="flex flex-col gap-4 pb-8 h-full group transition-colors"
 >
 	{
-		isCoverImagePath && coverImageSrc ? (
+		isCoverImageUrl && coverImageSrc ? (
 			<img
 				src={coverImageSrc}
 				alt={post.data.title}

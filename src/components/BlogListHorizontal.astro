@@ -26,11 +26,12 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 	{
 		posts.map((post, index) => {
 			const coverImagePath = `/src/assets/blogimages/${post.slug}/cover.jpg`
-			const isCoverImagePath = post.data.coverImageCredit?.startsWith('/')
-			const coverImageSrc =
-				isCoverImagePath && post.data.coverImageCredit
-					? `${SITE_BASE}${post.data.coverImageCredit}`
-					: null
+			const isCoverImageUrl = /^https?:\/\//.test(
+				post.data.coverImageCredit || ''
+			)
+			const coverImageSrc = isCoverImageUrl
+				? post.data.coverImageCredit
+				: null
 
 			return (
 				<>
@@ -40,7 +41,7 @@ const blogImages = import.meta.glob<{ default: ImageMetadata }>(
 					>
 						{/* 左侧:图片 */}
 						<div class="md:w-80 shrink-0">
-							{isCoverImagePath && coverImageSrc ? (
+						{isCoverImageUrl && coverImageSrc ? (
 								<img
 									src={coverImageSrc}
 									alt={post.data.title}

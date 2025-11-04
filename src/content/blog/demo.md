@@ -2,7 +2,7 @@
 title: demo
 description: ldldld
 pubDate: 2025-10-28T16:00:00.000Z
-coverImageCredit: /blog-images/journey.jpg
+coverImageCredit: https://api.acgurl.link/img?type=ysh
 tag:
   - demo
   - News
