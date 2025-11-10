@@ -1,60 +1,55 @@
 {
-  "$schema": "https://frontmatter.codes/frontmatter.schema.json",
-  "frontMatter.framework.id": "astro",
-  "frontMatter.preview.host": "http://localhost:4321",
-  "frontMatter.content.publicFolder": "public",
-  "frontMatter.content.pageFolders": [
-    {
-      "title": "blog",
-      "path": "[[workspace]]/src/content/blog"
-    }
-  ],
-  "frontMatter.taxonomy.contentTypes": [
-    {
-      "name": "default",
-      "pageBundle": false,
-      "previewPath": "'blog'",
-      "filePrefix": null,
-      "clearEmpty": true,
-      "fields": [
-        {
-          "title": "title",
-          "name": "title",
-          "type": "string"
-        },
-        {
-          "title": "description",
-          "name": "description",
-          "type": "string"
-        },
-        {
-          "title": "pubDate",
-          "name": "pubDate",
-          "type": "datetime"
-        },
-        {
-          "title": "categories",
-          "name": "categories",
-          "type": "categories"
-        },
-        {
-          "title": "coverImageCredit",
-          "name": "coverImageCredit",
-          "type": "string"
-        },
-        {
-          "title": "tag",
-          "name": "tag",
-          "type": "tags"
-        },
-        {
-          "title": "keywords",
-          "name": "keywords",
-          "type": "fields",
-          "fields": []
-        }
-      ]
-    }
-  ],
-  "frontMatter.panel.openOnSupportedFile": false
+	"$schema": "https://frontmatter.codes/frontmatter.schema.json",
+	"frontMatter.framework.id": "astro",
+	"frontMatter.preview.host": "http://localhost:4321",
+	"frontMatter.content.publicFolder": "public",
+	"frontMatter.content.pageFolders": [
+		{
+			"title": "blog",
+			"path": "[[workspace]]/src/content/blog"
+		}
+	],
+	"frontMatter.taxonomy.contentTypes": [
+		{
+			"name": "default",
+			"pageBundle": false,
+			"previewPath": "'blog'",
+			"filePrefix": null,
+			"clearEmpty": true,
+			"fields": [
+				{
+					"title": "title",
+					"name": "title",
+					"type": "string"
+				},
+				{
+					"title": "description",
+					"name": "description",
+					"type": "string"
+				},
+				{
+					"title": "pubDate",
+					"name": "pubDate",
+					"type": "datetime"
+				},
+				{
+					"title": "tags",
+					"name": "tags",
+					"type": "tags"
+				},
+				{
+					"title": "coverImageCredit",
+					"name": "coverImageCredit",
+					"type": "image"
+				},
+
+				{
+					"title": "categories",
+					"name": "categories",
+					"type": "categories"
+				}
+			]
+		}
+	],
+	"frontMatter.panel.openOnSupportedFile": false
 }

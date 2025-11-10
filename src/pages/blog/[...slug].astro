@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection } from 'astro:content'
 import BlogPostLayout from '../../layouts/BlogPostLayout.astro'
 import type { MarkdownHeading } from 'astro'
-import { SITE_BASE } from '@/consts'
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blog')
@@ -81,6 +80,7 @@ const initialCategory =
 	{...post.data}
 	headings={headings}
 	slug={slug}
+	tags={post.data.tags || []}
 	remarkPluginFrontmatter={remarkPluginFrontmatter}
 	otherPosts={otherPosts}
 	lastPost={lastPosts}
