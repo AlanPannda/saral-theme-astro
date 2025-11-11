@@ -72,9 +72,12 @@ const coverImageSrc = isCoverImageUrl ? coverImageCredit : null
 const coverImageUrl =
 	isCoverImageUrl && coverImageSrc ? new URL(coverImageSrc) : null
 
-const lastModified = dayjs(remarkPluginFrontmatter.lastModified)
-	.utc()
-	.format('D MMM YYYY')
+const lastModifiedSource =
+	remarkPluginFrontmatter.lastModified ?? updatedDate ?? pubDate
+const lastModifiedDate = dayjs(lastModifiedSource)
+const lastModified = lastModifiedDate.isValid()
+	? lastModifiedDate.utc().format('D MMM YYYY')
+	: dayjs(pubDate).utc().format('D MMM YYYY')
 
 // const tagRoutes = {
 // 	All: '/blog',
